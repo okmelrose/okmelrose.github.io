@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>URGENT</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+      color: #0;
+    }
+    .countdown {
+      font-size: 6rem;
+      margin: 20px 0;
+      font-weight: bold; /* makes text bold */
+    }
+    img {
+      margin-top: 30px;
+      width: 500px;
+      border-radius: 0px;
+    }
+  </style>
+</head>
+<body>
+  <div id="countdown1" class="countdown"></div>
+  <div id="image-section" style="display:none;">
+    <img src="https://i.imgur.com/YEh1f9w.jpeg" alt="HEART TO HEART">
+    <div id="countdown2" class="countdown"></div>
+  </div>
+
+  <script>
+    // Dates
+    const event1Date = new Date("September 13, 2025 00:00:00").getTime();
+    const event2Date = new Date("October 31, 2025 00:00:00").getTime();
+
+    const countdown1El = document.getElementById("countdown1");
+    const countdown2El = document.getElementById("countdown2");
+    const imageSection = document.getElementById("image-section");
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+
+      if (now < event1Date) {
+        // Show first countdown
+        let distance = event1Date - now;
+        countdown1El.innerHTML = formatTime(distance, "");
+      } else {
+        // Hide first, show second under image
+        countdown1El.style.display = "none";
+        imageSection.style.display = "block";
+
+        let distance = event2Date - now;
+        if (distance > 0) {
+          countdown2El.innerHTML = formatTime(distance, "");
+        } else {
+          countdown2El.innerHTML = "";
+        }
+      }
+    }
+
+    function formatTime(distance, label) {
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      return `${label} ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
