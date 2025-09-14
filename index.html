@@ -1,80 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>TIME</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #ffffff;
-      color: #0;
+      color: #000;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh; /* full screen height */
+      height: 100vh;
       margin: 0;
       text-align: center;
     }
     .countdown {
       font-size: 5rem;
       margin: 20px 0;
-      font-weight: bold; /* makes text bold */
+      font-weight: bold;
     }
-    img {
+    .img-wrap {
       margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .img-wrap img {
       width: 500px;
+      max-width: 90vw;
+      height: auto;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div id="countdown1" class="countdown"></div>
-  <div id="image-section" style="display:none;">
-    <img src="https://i.imgur.com/YEh1f9w.jpeg" alt="The">
-    <div id="countdown2" class="countdown"></div>
+  <div id="c1" class="countdown" aria-live="polite"></div>
+
+  <div id="iSec" style="display:none;">
+    <div class="img-wrap">
+      <!-- image src set via JS from base64 -->
+      <img id="lockImg" src="" alt="" />
+    </div>
+    <div id="c2" class="countdown"></div>
   </div>
 
   <script>
-    // Dates
-    const event1Date = new Date("October 3, 2025 00:00:00").getTime();
-    const event2Date = new Date("October 31, 2025 00:00:00").getTime();
 
-    const countdown1El = document.getElementById("countdown1");
-    const countdown2El = document.getElementById("countdown2");
-    const imageSection = document.getElementById("image-section");
+    function d64(s){ try { return atob(s); } catch(e) { return ""; } }
 
-    function updateCountdown() {
-      const now = new Date().getTime();
 
-      if (now < event1Date) {
-        // Show first countdown
-        let distance = event1Date - now;
-        countdown1El.innerHTML = formatTime(distance, "");
+    const ev1 = new Date(d64("T2N0b2JlciAzLCAyMDI1IDA6MDA6MDA=")).getTime();
+    const ev2 = new Date(d64("T2N0b2JlciAzMSwgMjAyNSAwMDowMDowMA==")).getTime();
+    const releasedMsg = d64("SEVBUlQgVE8gSEVBUlQgSEFTIFJFTEVBU0VELg==");
+
+
+    const imgB64 = "aHR0cHM6Ly9pLmltZ3VyLmNvbS9ZRWgxZjl3LmpwZWc=";
+    const altB64 = "VGhlIGltYWdl";
+
+    const c1 = document.getElementById("c1");
+    const c2 = document.getElementById("c2");
+    const iSec = document.getElementById("iSec");
+    const lockImg = document.getElementById("lockImg");
+
+
+    (function setImg(){
+      const url = d64(imgB64);
+      const alt = d64(altB64);
+
+      if(url && url.indexOf("http") === 0){
+        lockImg.src = url;
+        lockImg.alt = alt || "image";
+      }
+    })();
+
+    function fmt(ms){
+      const d = Math.floor(ms/86400000);
+      const h = Math.floor((ms%86400000)/3600000);
+      const m = Math.floor((ms%3600000)/60000);
+      const s = Math.floor((ms%60000)/1000);
+      return `${d}d ${h}h ${m}m ${s}s`;
+    }
+
+    function update(){
+      const now = Date.now();
+      if(now < ev1){
+        c1.textContent = fmt(ev1 - now);
       } else {
-        // Hide first, show second under image
-        countdown1El.style.display = "none";
-        imageSection.style.display = "block";
-
-        let distance = event2Date - now;
-        if (distance > 0) {
-          countdown2El.innerHTML = formatTime(distance, "");
+        c1.style.display = "none";
+        iSec.style.display = "block";
+        const rem = ev2 - now;
+        if(rem > 0){
+          c2.textContent = fmt(rem);
         } else {
-          countdown2El.innerHTML = "HEART TO HEART HAS RELEASED.";
+          c2.textContent = releasedMsg;
         }
       }
     }
 
-    function formatTime(distance, label) {
-      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      return `${label} ${days}d ${hours}h ${minutes}m ${seconds}s`;
-    }
+    update();
+    setInterval(update, 1000);
 
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+
+    (function antiInspect(){
+
+      window.addEventListener("keydown", function(e){
+  
+        if(e.key === "F12" || (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key))){
+          e.preventDefault(); 
+      
+          document.body.innerHTML = "<div style='display:flex;align-items:center;justify-content:center;height:100vh'><h1 style='color:#b00'>Access Denied</h1></div>";
+        }
+      }, {passive:false});
+
+
+      try {
+        if(window.console && console.clear){
+          let t = 0;
+          setInterval(function(){
+            t++;
+            if(t % 3 === 0) try { console.clear(); } catch(e){}
+          }, 2000);
+        }
+      } catch(e){}
+    })();
   </script>
 </body>
 </html>
