@@ -20,6 +20,7 @@
       font-size: 5rem;
       margin: 20px 0;
       font-weight: bold;
+      cursor: pointer;
     }
     .img-wrap {
       margin-top: 30px;
@@ -34,6 +35,24 @@
       height: auto;
       display: block;
     }
+    #pwBox {
+      display: none;
+      margin-top: 20px;
+    }
+    #pwBox input {
+      padding: 8px;
+      font-size: 1rem;
+    }
+    #pwBox button {
+      padding: 8px 12px;
+      margin-left: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #ytFrame {
+      margin-top: 30px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -41,35 +60,58 @@
 
   <div id="iSec" style="display:none;">
     <div class="img-wrap">
-      <!-- image src set via JS from base64 -->
       <img id="lockImg" src="" alt="" />
     </div>
     <div id="c2" class="countdown"></div>
   </div>
 
+  <div id="pwBox">
+    <input type="password" id="pwInput" placeholder="ENTER PASSWORD" />
+    <button id="pwBtn">SUBMIT</button>
+  </div>
+
+  <div id="ytFrame">
+    <iframe id="ytVid" width="560" height="315" 
+      src="" 
+      title="YouTube video player" 
+      frameborder="0" 
+      allow="autoplay; encrypted-media" 
+      allowfullscreen>
+    </iframe>
+  </div>
+
   <script>
-
     function d64(s){ try { return atob(s); } catch(e) { return ""; } }
-
 
     const ev1 = new Date(d64("T2N0b2JlciAzLCAyMDI1IDA6MDA6MDA=")).getTime();
     const ev2 = new Date(d64("T2N0b2JlciAzMSwgMjAyNSAwMDowMDowMA==")).getTime();
     const releasedMsg = d64("SEVBUlQgVE8gSEVBUlQgSEFTIFJFTEVBU0VELg==");
 
-
     const imgB64 = "aHR0cHM6Ly9pLmltZ3VyLmNvbS9ZRWgxZjl3LmpwZWc=";
     const altB64 = "VGhlIGltYWdl";
+
+    const ytB64 = "aHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvWWo3TlN1cjhTNFk/YXV0b3BsYXk9MQ==";
+
+    const kwB64 = [
+      "dGhlIHdvcmxk","Y29sb3Jz","YmVuek==","Y2F0d2Fsaw==",
+      "bWlzdXNlZA==","ZzY=","cm9jayBsaWtlIG1l",
+      "aGVhciBtZSBjbGVhcmx5","cGxhbmVz","ZXBpbG9ndWU="
+    ];
 
     const c1 = document.getElementById("c1");
     const c2 = document.getElementById("c2");
     const iSec = document.getElementById("iSec");
     const lockImg = document.getElementById("lockImg");
 
+    const pwBox = document.getElementById("pwBox");
+    const pwInput = document.getElementById("pwInput");
+    const pwBtn = document.getElementById("pwBtn");
+    const ytFrame = document.getElementById("ytFrame");
+    const ytVid = document.getElementById("ytVid");
 
     (function setImg(){
       const url = d64(imgB64);
       const alt = d64(altB64);
-
       if(url && url.indexOf("http") === 0){
         lockImg.src = url;
         lockImg.alt = alt || "image";
@@ -100,23 +142,45 @@
       }
     }
 
-
     update();
     setInterval(update, 1000);
 
+    [c1, c2].forEach(el => {
+      el.addEventListener("click", () => {
+        pwBox.style.display = "block";
+        pwInput.focus();
+      });
+    });
+
+    const keywords = kwB64.map(k => d64(k).toLowerCase());
+
+    function checkPw(){
+      const val = pwInput.value.trim().toLowerCase();
+      if(keywords.includes(val)){
+        c1.style.display = "none";
+        c2.style.display = "none";
+        iSec.style.display = "none";
+        pwBox.style.display = "none";
+
+        ytVid.src = d64(ytB64);
+        ytFrame.style.display = "block";
+      } else {
+        alert("INCORRECT");
+      }
+    }
+
+    pwBtn.addEventListener("click", checkPw);
+    pwInput.addEventListener("keypress", function(e){
+      if(e.key === "Enter"){ checkPw(); }
+    });
 
     (function antiInspect(){
-
       window.addEventListener("keydown", function(e){
-  
         if(e.key === "F12" || (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key))){
           e.preventDefault(); 
-      
           document.body.innerHTML = "<div style='display:flex;align-items:center;justify-content:center;height:100vh'><h1 style='color:#b00'>Access Denied</h1></div>";
         }
       }, {passive:false});
-
-
       try {
         if(window.console && console.clear){
           let t = 0;
