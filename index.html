@@ -34,6 +34,7 @@
       max-width: 90vw;
       height: auto;
       display: block;
+      cursor: pointer;
     }
     #pwBox {
       display: none;
@@ -92,6 +93,8 @@
 
     const ytB64 = "aHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvWWo3TlN1cjhTNFk/YXV0b3BsYXk9MQ==";
 
+    const linkB64 = "aHR0cHM6Ly9kaXN0cm9raWQuY29tL2h5cGVyZm9sbG93L21lbHJvc2UyNS9oZWFydC10by1oZWFydA==";
+
     const kwB64 = [
       "dGhlIHdvcmxk","Y29sb3Jz","YmVuek==","Y2F0d2Fsaw==",
       "bWlzdXNlZA==","ZzY=","cm9jayBsaWtlIG1l",
@@ -117,6 +120,14 @@
         lockImg.alt = alt || "image";
       }
     })();
+
+    // Make image clickable to open the encoded link
+    lockImg.addEventListener("click", () => {
+      const link = d64(linkB64);
+      if(link && link.indexOf("http") === 0){
+        window.open(link, "_blank");
+      }
+    });
 
     function fmt(ms){
       const d = Math.floor(ms/86400000);
