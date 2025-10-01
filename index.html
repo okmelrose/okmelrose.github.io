@@ -83,9 +83,8 @@
 
   <script>
     function d64(s){ try { return atob(s); } catch(e) { return ""; } }
-
-    const ev1 = new Date(d64("T2N0b2JlciAzLCAyMDI1IDA6MDA6MDA=")).getTime();
-    const ev2 = new Date(d64("T2N0b2JlciAzMSwgMjAyNSAwMDowMDowMA==")).getTime();
+    const ev1 = Date.UTC(2025, 9, 3, 17, 0, 0);
+    const ev2 = Date.UTC(2025, 9, 31, 5, 0, 0);
     const releasedMsg = d64("SEVBUlQgVE8gSEVBUlQgSEFTIFJFTEVBU0VELg==");
 
     const imgB64 = "aHR0cHM6Ly9pLmltZ3VyLmNvbS9ZRWgxZjl3LmpwZWc=";
