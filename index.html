@@ -1,146 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>TIME</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>okmelrose</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      color: #000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      background: white;
+      color: black;
+      font-family: Helvetica, Arial, sans-serif;
       margin: 0;
-      text-align: center;
-    }
-    .countdown {
-      font-size: 5rem;
-      margin: 20px 0;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .img-wrap {
-      margin-top: 30px;
+      padding: 40px;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
+      align-items: flex-start;
     }
-    .img-wrap img {
-      width: 500px;
-      max-width: 90vw;
-      height: auto;
-      display: block;
-      cursor: pointer;
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      font-weight: 500;
     }
-    #pwBox {
-      display: none;
-      margin-top: 20px;
+
+    a {
+      color: black;
+      font-size: 18px;
+      text-decoration: underline;
+      margin-right: 20px;
     }
-    #pwBox input {
-      padding: 8px;
-      font-size: 1rem;
-    }
-    #pwBox button {
-      padding: 8px 12px;
-      margin-left: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    #ytFrame {
-      margin-top: 30px;
-      display: none;
-    }
-    #hintMsg {
-      margin-top: 15px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #b00;
-      display: none;
+
+    a:hover {
+      opacity: 0.6;
     }
   </style>
 </head>
 <body>
-  <div id="c1" class="countdown" aria-live="polite"></div>
-  <div id="iSec" style="display:none;">
-    <div class="img-wrap">
-      <img id="lockImg" src="" alt="" />
-    </div>
-    <div id="c2" class="countdown"></div>
-    <div id="hintMsg"></div>
-  </div>
-  <div id="pwBox">
-    <input type="password" id="pwInput" />
-    <button id="pwBtn"></button>
-  </div>
-  <div id="ytFrame">
-    <iframe id="ytVid" width="560" height="315" src="" title="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-  </div>
-  <script>
-    function d64(s){try{return atob(s);}catch(e){return"";}}
-    const m = {
-      x1:"aHR0cHM6Ly93d3cueW91dHViZS5jb20vZW1iZWQvWWo3TlN1cjhTNFk/YXV0b3BsYXk9MQ==",
-      x2:"SEVBUlQgVE8gSEVBUlQgSEFTIFJFTEVBU0VELg==",
-      x3:"T2N0b2JlciAzLCAyMDI1IDA6MDA6MDA=",
-      x4:"aHR0cHM6Ly9pLmltZ3VyLmNvbS9ZRWgxZjl3LmpwZWc=",
-      x5:"aHR0cHM6Ly9kaXN0cm9raWQuY29tL2h5cGVyZm9sbG93L21lbHJvc2UyNS9oZWFydC10by1oZWFydA==",
-      x6:"T2N0b2JlciAzMSwgMjAyNSAwMDowMDowMA==",
-      x7:"SEVBUlQgVE8gSEVBUlQ=",
-      x8:"WW91VVRVQiB2aWRlbyBwbGF5ZXI=",
-      x9:"MTAzMTI1",
-      x10:"MTAwMzI1",
-      x11:"aGludA==",
-      x12:"RU5URVIgUEFTU1dPUkQ=",
-      x13:"U1VCTUlU",
-      x14:"REVOSU5FRA==",
-      x15:"UEFZIEFURUENUIFRPIFRIRSBUSU1F",
-      x16:"QWNjZXNzIERlbmllZA==",
-      x17:"aGludF9zaG93bl92MQ=="
-    };
-    const ev1 = new Date(d64(m.x3)).getTime();
-    const ev2 = new Date(d64(m.x6)).getTime();
-    const releasedMsg = d64(m.x2);
-    const imgUrl = d64(m.x4);
-    const imgAlt = d64(m.x7);
-    const ytUrl = d64(m.x1);
-    const externalLink = d64(m.x5);
-    const keywords = [d64(m.x9).toLowerCase(),d64(m.x10).toLowerCase(),d64(m.x11).toLowerCase()];
-    const placeholderText = d64(m.x12);
-    const submitText = d64(m.x13);
-    const deniedText = d64(m.x14);
-    const hintText = d64(m.x15);
-    const accessDeniedText = d64(m.x16);
-    const hintStorageKey = d64(m.x17);
-    const c1 = document.getElementById("c1");
-    const c2 = document.getElementById("c2");
-    const iSec = document.getElementById("iSec");
-    const lockImg = document.getElementById("lockImg");
-    const pwBox = document.getElementById("pwBox");
-    const pwInput = document.getElementById("pwInput");
-    const pwBtn = document.getElementById("pwBtn");
-    const ytFrame = document.getElementById("ytFrame");
-    const ytVid = document.getElementById("ytVid");
-    const hintMsg = document.getElementById("hintMsg");
-    try{lockImg.src = imgUrl; lockImg.alt = imgAlt || "image";}catch(e){}
-    pwInput.placeholder = placeholderText;
-    pwBtn.textContent = submitText;
-    ytVid.title = d64(m.x8);
-    function isHintShown(){try{return localStorage.getItem(hintStorageKey) === "1";}catch(e){return !!window.__hintShownFallback;}}
-    function setHintShown(){try{localStorage.setItem(hintStorageKey,"1");}catch(e){window.__hintShownFallback = true;}}
-    lockImg.addEventListener("click",()=>{if(externalLink && externalLink.indexOf("http")===0){window.open(externalLink,"_blank");}});
-    function fmt(ms){const d = Math.floor(ms/86400000); const h = Math.floor((ms%86400000)/3600000); const m = Math.floor((ms%3600000)/60000); const s = Math.floor((ms%60000)/1000); return `${d}d ${h}h ${m}m ${s}s`;}
-    function update(){const now = Date.now(); if(now < ev1){c1.textContent = fmt(ev1 - now);} else {c1.style.display = "none"; iSec.style.display = "block"; const rem = ev2 - now; if(rem > 0){c2.textContent = fmt(rem);} else {c2.textContent = releasedMsg;}}}
-    update();
-    setInterval(update,1000);
-    [c1,c2].forEach(el=>{el.addEventListener("click",()=>{pwBox.style.display = "block"; pwInput.focus();});});
-    function showHintOnce(){if(!isHintShown()){hintMsg.textContent = hintText; hintMsg.style.display = "block"; setHintShown();} else {hintMsg.textContent = ""; hintMsg.style.display = "none";}}
-    function checkPw(){const val = pwInput.value.trim().toLowerCase(); if(val === "hint"){showHintOnce(); pwInput.value = ""; return;} if(keywords.includes(val)){c1.style.display = "none"; c2.style.display = "none"; iSec.style.display = "none"; pwBox.style.display = "none"; hintMsg.style.display = "none"; ytVid.src = ytUrl; ytFrame.style.display = "block";} else {alert(deniedText);}}
-    pwBtn.addEventListener("click",checkPw);
-    pwInput.addEventListener("keypress",function(e){if(e.key === "Enter"){checkPw();}});
-    (function(){window.addEventListener("keydown",function(e){if(e.key === "F12" || (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key))){e.preventDefault(); document.body.innerHTML = "<div style='display:flex;align-items:center;justify-content:center;height:100vh'><h1 style='color:#b00'>"+accessDeniedText+"</h1></div>";}} ,{passive:false}); try{if(window.console && console.clear){let t=0; setInterval(function(){t++; if(t%3===0) try{console.clear();}catch(e){} },2000);} }catch(e){} })();
-  </script>
+  <h1>I make music and I make games too.</h1>
+
+  <a href="https://okmelrose.github.io/osamaclicker/">Osama Clicker</a>
+  <a href="https://okmelrose.github.io/blackjack/">Blackjack</a>
 </body>
 </html>
